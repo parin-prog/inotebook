@@ -82,4 +82,11 @@ router.post('/login', [body('email').isEmail({min:5},
                   res.json(authtoken);
 })
 
+// Route#3 Get logged in user details using: POST "/api/auth/getuser". Login required
+router.post('/getuser', fetchuser, async (req, res)=>{
+                const userId = req.user.id;
+                let user = await User.findById(userId).select('-password');
+                res.send(user)    
+})
+
 module.exports = router;

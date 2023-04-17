@@ -7,8 +7,10 @@ const fetchuser = (req, res, next) => {
     if(!token) {
         return res.status(401).send({error: 'Please authenticate using a valid token'})
     }
+
+    // Decode JWT token to authenticate
     const data = jwt.verify(token, JWT_SECRET);
-    req.body = data.user;
+    req.user = data.user;
     next();
 }
 
