@@ -17,7 +17,7 @@ body('password').isLength({ min: 5 })], async(req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-
+    try {
     // Check whether the user with email already exists
     let user = await User.findOne({email: req.body.email});
     if (user) {
@@ -46,7 +46,10 @@ body('password').isLength({ min: 5 })], async(req, res) => {
 
     const authtoken = jwt.sign(data, JWT_SECRET);
     res.json({authtoken});
-
+        } catch (error){
+            console.error(err.message);
+            res.status(500).send('Some error occured');
+        }
 })
 
 // Route 2: Authenticate user using: POST "/api/auth/login". No login required
@@ -60,7 +63,7 @@ router.post('/login', [body('email').isEmail({min:5},
                 }
 
                 const {email, password} = req.body;
-
+                try {
                 // find data from db by email
                 let user = await User.findOne({email});
                 if(!user) {
@@ -80,13 +83,22 @@ router.post('/login', [body('email').isEmail({min:5},
                   }
                   const authtoken = jwt.sign(data ,JWT_SECRET);
                   res.json(authtoken);
+                } catch(error){
+                    console.log(error.message);
+                    res.status(500).send('Internal Server Error');
+                  }
 })
 
 // Route#3 Get logged in user details using: POST "/api/auth/getuser". Login required
 router.post('/getuser', fetchuser, async (req, res)=>{
+            try {
                 const userId = req.user.id;
                 let user = await User.findById(userId).select('-password');
-                res.send(user)    
+                res.send(user)
+            } catch (error) {
+                console.error(error.message);
+                res.status(500).send("Internal Server Error");
+              }
 })
 
 module.exports = router;
