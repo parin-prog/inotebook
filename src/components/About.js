@@ -1,8 +1,13 @@
 import React from 'react'
 
-function About() {
+
+const About = ()=> {
+
+
   return (
-    <div>About</div>
+    <div>
+      This is page
+    </div>
   )
 }
 
