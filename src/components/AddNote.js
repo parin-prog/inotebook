@@ -4,16 +4,17 @@ import noteContext from '../context/notes/noteContext';
 const AddNote = () => {
 
     const context = useContext(noteContext);
-    const {addNote} = context;
-    const [note, setnote] = useState({title:"", description:"", tags:"default"});
+    const { addNote } = context;
+    const [note, setnote] = useState({ title: "", description: "", tags: "" });
 
     const clickHandle = (e) => {
         e.preventDefault();
         addNote(note.title, note.description, note.tags)
+        setnote({ title: "", description: "", tags: "" })
     }
 
     const changeHandle = (e) => {
-        setnote({...note, [e.target.name] : e.target.value});
+        setnote({ ...note, [e.target.name]: e.target.value });
     }
 
     return (
@@ -21,18 +22,17 @@ const AddNote = () => {
             <h2>Add a Note</h2>
 
             <form className='my-3'>
-                <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Title</label>
-                    <input type="text" className="form-control" id="title" aria-describedby="title" name='title' onChange={changeHandle}/>
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+                <div className="form-floating mb-3">
+                    <textarea className="form-control" placeholder="Leave a comment here" id="title" name="title" onChange={changeHandle} style={{ height: "100px" }}></textarea>
+                    <label htmlFor="title">Title</label>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="description" className="form-label">Description</label>
-                    <input type="text" className="form-control" id="description" name='description'  onChange={changeHandle}/>
+                <div className="form-floating mb-3">
+                    <textarea className="form-control" placeholder="Leave a comment here" id="description" name="description" onChange={changeHandle} style={{ height: "100px" }}></textarea>
+                    <label htmlFor="description">Description</label>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="tags" className="form-label">Tags</label>
-                    <input type="text" className="form-control" id="tags" name='tags'  onChange={changeHandle}/>
+                <div className="form-floating mb-3">
+                    <textarea className="form-control" placeholder="Leave a comment here" id="tags" name="tags" onChange={changeHandle} style={{ height: "100px" }}></textarea>
+                    <label htmlFor="tags">Tags</label>
                 </div>
                 <button type="submit" className="btn btn-primary" onClick={clickHandle}>Add Note</button>
             </form>
@@ -40,4 +40,4 @@ const AddNote = () => {
     )
 }
 
-export default AddNote
+export default AddNote;

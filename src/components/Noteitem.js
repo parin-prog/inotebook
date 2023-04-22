@@ -7,7 +7,7 @@ const Noteitem = (props) => {
     const { note, updateNote } = props;
     return (
         
-            <div className="card col-md-3">
+            <div className="card col-md-4 my-3">
                     <div className="card-body">
                         <h5 className="card-title">{note.title}</h5>
                         <p className="card-text">{note.description}</p>
