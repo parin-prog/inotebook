@@ -1,54 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const SignUp = () => {
+const SignUp = (props) => {
+    const [user, setuser] = useState({email:"",name:"",password:"",cpassword:""})
+    const navigate = useNavigate()
+
+    const changeHandler = (e) =>{
+        setuser({...user, [e.target.name]: e.target.value});
+    }
+
+    const handleSubmit = async(e) =>{
+        const {email, name, password} = user;
+        e.preventDefault();
+
+        if (user.cpassword === password) {
+        const response = await fetch(`http://localhost:5000/api/auth/createuser`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email, name, password}) 
+          });
+
+        const json = await response.json();
+        localStorage.setItem('token', json.authtoken);
+        navigate('/')
+        props.showAlert("Signed up successfully ", "success")
+        } else {
+            props.showAlert("Invalid password try again", "danger")
+        }
+    }
     return (
-        <div>
-            <form class="row g-3">
-                <div class="col-md-6">
-                    <label for="inputEmail4" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" />
+        <div className='container my-4'>
+            <form className="row g-3" onSubmit={handleSubmit}>
+                <div className="col-12">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input type="email" className="form-control" onChange={changeHandler} name="email" value={user.email} id="email" />
                 </div>
-                <div class="col-md-6">
-                    <label for="inputPassword4" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword4" />
+                <div className="col-12">
+                    <label htmlFor="name" className="form-label">Name</label>
+                    <input type="text" className="form-control" onChange={changeHandler} name="name" value={user.name} id="name" required/>
                 </div>
-                <div class="col-12">
-                    <label for="inputAddress" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" />
+                <div className="col-12">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <input type="password" className="form-control" onChange={changeHandler} name="password" value={user.password} id="password" minLength={5} required/>
                 </div>
-                <div class="col-12">
-                    <label for="inputAddress2" class="form-label">Address 2</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
+                <div className="col-12">
+                    <label htmlFor="cpassword" className="form-label">Confirm Password</label>
+                    <input type="password" className="form-control" onChange={changeHandler} name="cpassword" value={user.cpassword} id="cpassword" minLength={5} required/>
                 </div>
-                <div class="col-md-6">
-                    <label for="inputCity" class="form-label">City</label>
-                    <input type="text" class="form-control" id="inputCity" />
-                </div>
-                <div class="col-md-4">
-                    <label for="inputState" class="form-label">State</label>
-                    <select id="inputState" class="form-select">
-                        <option selected>Choose...</option>
-                        <option>...</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label for="inputZip" class="form-label">Zip</label>
-                    <input type="text" class="form-control" id="inputZip" />
-                </div>
-                <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="gridCheck" />
-                        <label class="form-check-label" for="gridCheck">
-                            Check me out
-                        </label>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                <div className="col-12 my-5">
+                    <button type="submit" className="btn btn-primary">Sign up</button>
                 </div>
             </form>
         </div>
     )
 }
 
-export default SignUp
+export default SignUp;

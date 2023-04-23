@@ -1,55 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
+import {useNavigate} from 'react-router'
 
-const Login = () => {
+const Login = (props) => {
+    const [user, setuser] = useState({email: "", password: ""})
+    const navigate = useNavigate();
+
+    const changeHandler = (e) =>{
+        setuser({...user, [e.target.name]: e.target.value});
+    }
+
+    const handleSubmit = async(e) =>{
+        e.preventDefault();
+        const response = await fetch(`http://localhost:5000/api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email: user.email, password: user.password}) 
+          });
+
+          const json = await response.json();
+          console.log(json)
+          if (json.success) {
+            // save the auth token and redirect
+            localStorage.setItem('token', json.authtoken)
+            navigate('/')
+            props.showAlert("Logged in successfully ", "success")
+          } else {
+            props.showAlert("Authentication Denied", "danger")
+          }
+    }
     return (
-        <div>
-            <form>
-                <div class="row mb-3">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" />
+        <div className='mt-5'>
+            <form onSubmit={handleSubmit}>
+                <div className="row mb-3">
+                    <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">Email</label>
+                    <div className="col-sm-10">
+                        <input type="email" className="form-control" name="email" value={user.email} onChange={changeHandler} id="inputEmail3" />
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="inputPassword3" />
+                <div className="row mb-3">
+                    <label htmlFor="inputPassword3" className="col-sm-2 col-form-label">Password</label>
+                    <div className="col-sm-10">
+                        <input type="password" className="form-control" name="password" value={user.password} onChange={changeHandler} id="inputPassword3" />
                     </div>
                 </div>
-                <fieldset class="row mb-3">
-                    <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                    <div class="col-sm-10">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked />
-                            <label class="form-check-label" for="gridRadios1">
-                                First radio
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2" />
-                            <label class="form-check-label" for="gridRadios2">
-                                Second radio
-                            </label>
-                        </div>
-                        <div class="form-check disabled">
-                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled />
-                            <label class="form-check-label" for="gridRadios3">
-                                Third disabled radio
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-                <div class="row mb-3">
-                    <div class="col-sm-10 offset-sm-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gridCheck1" />
-                            <label class="form-check-label" for="gridCheck1">
-                                Example checkbox
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                <button type="submit" className="btn btn-primary">Sign in</button>
             </form>
         </div>
     )

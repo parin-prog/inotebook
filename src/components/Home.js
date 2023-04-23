@@ -1,11 +1,11 @@
 import React from 'react'
 import { Note } from './Notes';
 
-function Home() {
+function Home(props) {
 
   return (
     <div>
-      <Note/>
+      <Note showAlert={props.showAlert}/>
     </div>
   )
 }

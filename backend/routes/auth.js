@@ -56,9 +56,11 @@ body('password').isLength({ min: 5 })], async(req, res) => {
 router.post('/login', [body('email').isEmail({min:5},
             body('password').exists(),
             )], async (req, res) => {
+                let success = false;
                 // If there are errors, return Bad request and the errors.
                 const errors = validationResult(req);
                 if(!errors.isEmpty()) {
+                    success= false;
                     return res.status(400).json({errors: errors.array()})
                 }
 
@@ -67,11 +69,13 @@ router.post('/login', [body('email').isEmail({min:5},
                 // find data from db by email
                 let user = await User.findOne({email});
                 if(!user) {
+                    success = false;
                     return res.status(400).json({error: 'Please try to login with correct credentials'})
                 }
                 // decode the password & match with correct password
                 const passwordCompare = await bcrypt.compare(password, user.password);
                 if(!passwordCompare) {
+                    success = false;
                     return res.status(400).json({error: 'Please try to login with correct password'})
                 }
 
@@ -82,8 +86,10 @@ router.post('/login', [body('email').isEmail({min:5},
                     }
                   }
                   const authtoken = jwt.sign(data ,JWT_SECRET);
-                  res.json(authtoken);
+                  success = true;
+                  res.json({success, authtoken});
                 } catch(error){
+                    success = false;
                     console.log(error.message);
                     res.status(500).send('Internal Server Error');
                   }
