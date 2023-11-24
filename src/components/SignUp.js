@@ -14,13 +14,17 @@ const SignUp = (props) => {
         e.preventDefault();
 
         if (user.cpassword === password) {
-        const response = await fetch(`http://localhost:5000/api/auth/createuser`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({email, name, password}) 
-          });
+            const headers = {
+                "Content-Type": "application/json"
+              };
+              
+              const body = JSON.stringify({ email, name, password });
+              
+              const response = await fetch(`http://localhost:5000/api/auth/createuser`, {
+                method: "POST",
+                headers,
+                body
+              });
 
         const json = await response.json();
         localStorage.setItem('token', json.authtoken);

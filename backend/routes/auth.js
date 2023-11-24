@@ -34,8 +34,7 @@ body('password').isLength({ min: 5 })], async(req, res) => {
         email: req.body.email,
         password: secPass
     })
-    // .then(user => { res.send(user) })
-    // .catch(err => { console.log(err) })
+    .catch(err => { console.log(err) })
 
     // Adding JWT token for authentication purpose
     const data = {
@@ -47,7 +46,6 @@ body('password').isLength({ min: 5 })], async(req, res) => {
     const authtoken = jwt.sign(data, JWT_SECRET);
     res.json({authtoken});
         } catch (error){
-            console.error(err.message);
             res.status(500).send('Some error occured');
         }
 })

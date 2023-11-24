@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
-const mongoURI = "mongodb://localhost:27017/inotebook";
+const mongoURI = 'mongodb+srv://parinvaghani001:parin@cluster0.ypkezxu.mongodb.net/inotebook?retryWrites=true&w=majority';
 
-async function connectToMongo() {
-    await mongoose.connect(mongoURI,
-        console.log('connected to mongodb successfully.....'))
+ function connectToMongo() {
+     mongoose.connect(mongoURI)
+        .then(()=>console.log("Mongo connected..."))
+        .catch((err)=>console.log(err))
 }
 
 module.exports = connectToMongo;
